@@ -21,13 +21,17 @@ object Job {
   object Commands {
     case object Start
     case object Finish
+    case object Check
   }
 }
 
 /**
  * Job is an FSM Actor
+ *
+ * @param name - every job has a name
  */
 class Job(name : String) extends FSM[Job.State, Job.Data] {
+
   import Job._
 
   /** initialize with not started state */
@@ -46,4 +50,12 @@ class Job(name : String) extends FSM[Job.State, Job.Data] {
     case Event(Commands.Finish, Data.Empty) =>
       goto(State.Finished)
   }
+
+  whenUnhandled {
+    /** on check send name to sender */
+    case Event(Commands.Check,_) =>
+      sender() ! name
+      stay()
+  }
+
 }

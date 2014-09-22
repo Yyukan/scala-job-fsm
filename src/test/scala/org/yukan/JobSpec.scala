@@ -41,10 +41,16 @@ class JobSpec(_system: ActorSystem) extends TestKit(_system)
       job.stateData should be(Data.Empty)
     }
 
-
     "should finished by command" in new RunningJobState {
       job ! Commands.Finish
       job.stateName should be(State.Finished)
+      job.stateData should be(Data.Empty)
+    }
+
+    "should return name in any state" in new RunningJobState {
+      job ! Commands.Check
+      expectMsg("test1")
+      job.stateName should be(State.Running)
       job.stateData should be(Data.Empty)
     }
 

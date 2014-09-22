@@ -1,6 +1,6 @@
 package org.yukan.job
 
-import akka.actor.FSM
+import akka.actor.{Props, FSM}
 import scala.concurrent.duration._
 
 /** Job has state and data */
@@ -23,6 +23,8 @@ object Job {
     case object Finish
     case object Check
   }
+
+  def props(name: String) = Props(classOf[Job], name)
 }
 
 /**
@@ -37,19 +39,20 @@ class Job(name : String) extends FSM[Job.State, Job.Data] {
   /** initialize with not started state */
   startWith(State.NotStarted, Data.Empty)
 
-  when(State.Running)(FSM.NullFunction)
-  when(State.Finished)(FSM.NullFunction)
-
-  /** go to running state on start */
+  /** go to running state on start command */
   when(State.NotStarted) {
     case Event(Commands.Start, Data.Empty) =>
       goto(State.Running)
   }
 
+  /** go to finish state on finish command */
   when(State.Running) {
     case Event(Commands.Finish, Data.Empty) =>
       goto(State.Finished)
   }
+
+  /** do nothing in finish state */
+  when(State.Finished)(FSM.NullFunction)
 
   whenUnhandled {
     /** on check send name to sender */

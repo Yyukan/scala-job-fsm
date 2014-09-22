@@ -1,6 +1,6 @@
 package org.yukan
 
-import akka.actor.ActorSystem
+import akka.actor.{Inbox, ActorSystem}
 import akka.pattern.ask
 import akka.util.Timeout
 import scala.concurrent.duration._
@@ -14,12 +14,12 @@ import org.yukan.job.Job
 object JobFsm extends App {
 
   val system = ActorSystem("JobFSM")
+  val inbox = Inbox.create(system)
 
-  // TODO:yukan rewrite using inbox
   val job1 = system.actorOf(Job.props("job1"))
-  implicit val timeout = Timeout(5 seconds)
-  val a = job1 ? Commands.Check
-  a.onSuccess {
-    case result : String ⇒ println("Got result " + result)
-  }
+
+  inbox.send(job1, Commands.Check)
+
+  val message = inbox.receive(5 seconds)
+  println(s"Job 1 name $message")
 }

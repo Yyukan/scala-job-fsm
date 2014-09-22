@@ -22,7 +22,7 @@ class JobSpec(_system: ActorSystem) extends TestKit(_system)
   }
 
   class TestedJob {
-    val job = TestFSMRef(new Job)
+    val job = TestFSMRef(new Job("test1"))
   }
 
   trait RunningJobState extends TestedJob {

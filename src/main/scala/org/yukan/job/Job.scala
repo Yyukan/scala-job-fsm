@@ -27,7 +27,7 @@ object Job {
 /**
  * Job is an FSM Actor
  */
-class Job extends FSM[Job.State, Job.Data] {
+class Job(name : String) extends FSM[Job.State, Job.Data] {
   import Job._
 
   /** initialize with not started state */

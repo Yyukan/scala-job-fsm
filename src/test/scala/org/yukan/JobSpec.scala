@@ -24,6 +24,14 @@ class JobSpec(_system: ActorSystem) extends TestKit(_system)
       job.stateName should be(State.NotStarted)
       job.stateData should be(Data.Empty)
     }
+
+    "should started by command" in {
+      val job = TestFSMRef(new Job)
+      job ! Commands.Start
+      job.stateName should be(State.Running)
+      job.stateData should be(Data.Empty)
+    }
+
   }
 
 }

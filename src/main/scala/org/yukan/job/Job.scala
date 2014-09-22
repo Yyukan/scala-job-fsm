@@ -17,6 +17,11 @@ object Job {
   object Data {
     case object Empty extends Data
   }
+
+  object Commands {
+    case object Start
+    case object Finish
+  }
 }
 
 /**
@@ -24,5 +29,15 @@ object Job {
  */
 class Job extends FSM[Job.State, Job.Data] {
   import Job._
+
+  /** initialize with not started state */
   startWith(State.NotStarted, Data.Empty)
+
+  when(State.Running)(FSM.NullFunction)
+
+  /** go to running state on start */
+  when(State.NotStarted) {
+    case Event(Commands.Start, Data.Empty) =>
+      goto(State.Running)
+  }
 }

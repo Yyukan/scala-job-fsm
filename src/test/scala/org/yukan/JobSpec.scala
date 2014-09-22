@@ -21,17 +21,30 @@ class JobSpec(_system: ActorSystem) extends TestKit(_system)
     system.awaitTermination(10.seconds)
   }
 
+  class TestedJob {
+    val job = TestFSMRef(new Job)
+  }
+
+  trait RunningJobState extends TestedJob {
+    job.setState(State.Running, Data.Empty)
+  }
+
   "A Job actor" - {
-    "should be not started at birth" in {
-      val job = TestFSMRef(new Job)
+    "should be not started at birth" in new TestedJob {
       job.stateName should be(State.NotStarted)
       job.stateData should be(Data.Empty)
     }
 
-    "should started by command" in {
-      val job = TestFSMRef(new Job)
+    "should started by command" in new TestedJob {
       job ! Commands.Start
       job.stateName should be(State.Running)
+      job.stateData should be(Data.Empty)
+    }
+
+
+    "should finished by command" in new RunningJobState {
+      job ! Commands.Finish
+      job.stateName should be(State.Finished)
       job.stateData should be(Data.Empty)
     }
 

@@ -34,10 +34,16 @@ class Job extends FSM[Job.State, Job.Data] {
   startWith(State.NotStarted, Data.Empty)
 
   when(State.Running)(FSM.NullFunction)
+  when(State.Finished)(FSM.NullFunction)
 
   /** go to running state on start */
   when(State.NotStarted) {
     case Event(Commands.Start, Data.Empty) =>
       goto(State.Running)
+  }
+
+  when(State.Running) {
+    case Event(Commands.Finish, Data.Empty) =>
+      goto(State.Finished)
   }
 }

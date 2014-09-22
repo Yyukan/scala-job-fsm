@@ -5,6 +5,9 @@ import org.yukan.job.Job
 import org.yukan.job.Job._
 import scala.concurrent.duration._
 
+/**
+ * Test spec for Job FSM
+ */
 class JobSpec(_system: ActorSystem) extends TestKit(_system)
   with ImplicitSender
   with Matchers
@@ -13,7 +16,7 @@ class JobSpec(_system: ActorSystem) extends TestKit(_system)
 
   def this() = this(ActorSystem("JobFSMSpec"))
 
-  override def afterAll: Unit = {
+  override def afterAll(): Unit = {
     system.shutdown()
     system.awaitTermination(10.seconds)
   }

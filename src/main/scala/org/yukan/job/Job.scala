@@ -25,7 +25,7 @@ object Job {
 }
 
 /**
- * Created by oshtykhno on 22/09/14.
+ * Job is an FSM Actor
  */
 class Job extends FSM[Job.State, Job.Data] {
   import Job._

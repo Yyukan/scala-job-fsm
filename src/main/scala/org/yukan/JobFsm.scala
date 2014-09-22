@@ -3,7 +3,7 @@ package org.yukan
 import akka.actor.ActorSystem
 
 /**
- * Created by oshtykhno on 22/09/14.
+ * Job Final State Machine example application
  */
 object JobFsm extends App {
 
